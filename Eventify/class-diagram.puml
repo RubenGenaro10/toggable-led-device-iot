@@ -1,0 +1,185 @@
+@startuml
+
+' Render base classes/interfaces at the top, descendants below (top-down hierarchy)
+top to bottom direction
+
+' Base Structs for CQRS/Event-Driven architecture
+class Command {
+    int id
+    +Command(int commandId)
+    +operator==(const Command& other) : bool
+}
+class Event {
+    int id
+    +Event(int eventId)
+    +operator==(const Event& other) : bool
+}
+
+' Interfaces / Abstract Classes
+abstract class CommandHandler {
+    +handle(Command command)
+}
+abstract class EventHandler {
+    +on(Event event)
+}
+
+' Device Interface (inherits from both Command and Event handlers)
+abstract class Device {
+    +on(Event event)
+    +handle(Command command)
+}
+Device -up-|> EventHandler
+Device -up-|> CommandHandler
+
+' Base Sensor class (inherits from EventHandler)
+class Sensor {
+    protected int pin
+    protected EventHandler* handler
+    +Sensor(int pin, EventHandler* eventHandler = nullptr)
+    +on(Event event)
+}
+Sensor -up-|> EventHandler
+
+' Base Actuator class (inherits from CommandHandler)
+class Actuator {
+    protected int pin
+    protected CommandHandler* handler
+    +Actuator(int pin, CommandHandler* commandHandler = nullptr)
+    +handle(Command command)
+}
+Actuator -up-|> CommandHandler
+
+' =========================================================================
+' Sensors (Eventify Specific)
+' =========================================================================
+
+' Temperature Sensor DHT-22
+class TemperatureSensor {
+    private float lastTemperature
+    static const int TEMP_HIGH_EVENT_ID
+    static const int TEMP_NORMAL_EVENT_ID
+    +TemperatureSensor(int pin, EventHandler* eventHandler = nullptr)
+    +readTemperature() : float
+}
+TemperatureSensor -up-|> Sensor
+
+' RFID Reader RC522
+class RFIDReader {
+    static const int RFID_CARD_SCANNED_EVENT_ID
+    +RFIDReader(int pin, EventHandler* eventHandler = nullptr)
+    +readRFID() : string
+}
+RFIDReader -up-|> Sensor
+
+' 4x4 Membrane Keypad
+class Keypad {
+    static const int KEY_PRESSED_EVENT_ID
+    +Keypad(int pin, EventHandler* eventHandler = nullptr)
+    +readKey() : char
+}
+Keypad -up-|> Sensor
+
+' QR Code Reader (Check-In Stations)
+class QRCodeReader {
+    static const int QR_SCANNED_EVENT_ID
+    +QRCodeReader(int pin, EventHandler* eventHandler = nullptr)
+    +readQR() : string
+}
+QRCodeReader -up-|> Sensor
+
+' =========================================================================
+' Actuators (Eventify Specific)
+' =========================================================================
+
+' Micro Servo Motor (Mechanical dispensing)
+class ServoMotor {
+    private int angle
+    static const int ROTATE_SERVO_COMMAND_ID
+    +ServoMotor(int pin, CommandHandler* commandHandler = nullptr)
+    +rotate(int targetAngle)
+}
+ServoMotor -up-|> Actuator
+
+' LCD 1602 Display
+class LCDDisplay {
+    private string currentText
+    static const int WRITE_TEXT_COMMAND_ID
+    static const int CLEAR_DISPLAY_COMMAND_ID
+    +LCDDisplay(int pin, CommandHandler* commandHandler = nullptr)
+    +write(string text)
+    +clear()
+}
+LCDDisplay -up-|> Actuator
+
+' Cooling System (for Smart Food Dispenser)
+class CoolingSystem {
+    private bool coolingState
+    static const int START_COOLING_COMMAND_ID
+    static const int STOP_COOLING_COMMAND_ID
+    +CoolingSystem(int pin, CommandHandler* commandHandler = nullptr)
+    +turnOn()
+    +turnOff()
+}
+CoolingSystem -up-|> Actuator
+
+' Water Heater / Boiler (for Smart Coffee Maker)
+class WaterHeater {
+    private bool heatingState
+    static const int START_HEATING_COMMAND_ID
+    static const int STOP_HEATING_COMMAND_ID
+    +WaterHeater(int pin, CommandHandler* commandHandler = nullptr)
+    +heatWater()
+    +stopHeating()
+}
+WaterHeater -up-|> Actuator
+
+' =========================================================================
+' Smart Devices (Eventify Specific Concrete Devices)
+' =========================================================================
+
+' Smart Food Dispenser Device
+class SmartFoodDispenser {
+    private TemperatureSensor tempSensors[4]
+    private RFIDReader rfidReader
+    private Keypad keypad
+    private ServoMotor dispensers[20]
+    private LCDDisplay display
+    private CoolingSystem coolingSystem
+    
+    +SmartFoodDispenser(int tempPins[4], int rfidPin, int keypadPin, int servoPins[20], int lcdPin, int coolingPin)
+    +on(Event event)
+    +handle(Command command)
+    +getTemperature(int index) : float
+    +dispenseItem(int index)
+}
+SmartFoodDispenser -up-|> Device
+SmartFoodDispenser *-- "4" TemperatureSensor : contains
+SmartFoodDispenser *-- "1" RFIDReader : contains
+SmartFoodDispenser *-- "1" Keypad : contains
+SmartFoodDispenser *-- "20" ServoMotor : contains
+SmartFoodDispenser *-- "1" LCDDisplay : contains
+SmartFoodDispenser *-- "1" CoolingSystem : contains
+
+' Smart Coffee Maker Device
+class SmartCoffeeMaker {
+    private TemperatureSensor tempSensor
+    private RFIDReader rfidReader
+    private Keypad keypad
+    private ServoMotor dispensers[4]
+    private LCDDisplay display
+    private WaterHeater heater
+
+    +SmartCoffeeMaker(int tempPin, int rfidPin, int keypadPin, int servoPins[4], int lcdPin, int heaterPin)
+    +on(Event event)
+    +handle(Command command)
+    +prepareCoffee(int flavorIndex)
+}
+SmartCoffeeMaker -up-|> Device
+SmartCoffeeMaker *-- "1" TemperatureSensor : contains
+SmartCoffeeMaker *-- "1" RFIDReader : contains
+SmartCoffeeMaker *-- "1" Keypad : contains
+SmartCoffeeMaker *-- "4" ServoMotor : contains
+SmartCoffeeMaker *-- "1" LCDDisplay : contains
+SmartCoffeeMaker *-- "1" WaterHeater : contains
+
+@enduml
