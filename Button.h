@@ -1,41 +1,28 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
-/**
- * @file Button.h
- * @brief Declares the Button class.
- * 
- * A concrete sensor class in the Modest IoT Nano-framework for detecting button presses and
- * generating events. It serves as an example of extending the `Sensor` base class for input devices.
- * 
- * @author Angel Velasquez
- * @date March 22, 2025
- * @version 0.1
- */
-
-/*
- * This file is part of the Modest IoT Nano-framework (C++ Edition).
- * Copyright (c) 2025 Angel Velasquez
- *
- * Licensed under the Creative Commons Attribution-NoDerivatives 4.0 International (CC BY-ND 4.0).
- * You may use, copy, and distribute this software in its original, unmodified form, provided
- * you give appropriate credit to the original author (Angel Velasquez) and include this notice.
- * Modifications, adaptations, or derivative works are not permitted.
- * 
- * Full license text: https://creativecommons.org/licenses/by-nd/4.0/legalcode
- */
 
 #include "Sensor.h"
 
+/**
+ * @brief Clase concreta Button que hereda de Sensor.
+ * 
+ * Explicación para principiantes: La clase `Button` representa un pulsador físico conectado a la placa.
+ * Dado que un botón lee información externa (si está presionado o no), es un tipo de `Sensor`.
+ */
 class Button : public Sensor {
 public:
-    static const int BUTTON_PRESSED_EVENT_ID = 0; ///< Unique ID for button press event.
-    static const Event BUTTON_PRESSED_EVENT; ///< Predefined event for button presses.
+    // Explicación para principiantes: 'static const' define una constante compartida por todas las instancias de esta clase.
+    static const int BUTTON_PRESSED_EVENT_ID = 0; ///< Identificador único para el evento de botón presionado.
+    static const Event BUTTON_PRESSED_EVENT; ///< Objeto evento predefinido que representa que el botón fue pulsado.
 
     /**
-     * @brief Constructs a Button sensor.
-     * @param pin The GPIO pin for the button (configured as INPUT_PULLUP).
-     * @param eventHandler Optional handler to receive button events (default: nullptr).
+     * @brief Constructor del sensor de Botón.
+     * @param pin El pin GPIO físico para el botón (se configurará como INPUT_PULLUP en el archivo .cpp).
+     * @param eventHandler Puntero al EventHandler opcional para recibir los eventos del botón (por defecto: nullptr / nulo).
+     * 
+     * Explicación para principiantes: INPUT_PULLUP activa una resistencia interna de la placa que mantiene el pin en HIGH (alto/3.3V)
+     * por defecto, y cuando el botón se presiona, el voltaje cae a LOW (bajo/0V).
      */
     Button(int pin, EventHandler* eventHandler = nullptr);
 };

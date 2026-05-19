@@ -1,55 +1,42 @@
 #ifndef SENSOR_H
 #define SENSOR_H
 
-/**
- * @file Sensor.h
- * @brief Declares the Sensor base class.
- * 
- * This abstract base class represents input devices in the Modest IoT Nano-framework, providing
- * a foundation for sensors that generate events. It includes event propagation to an optional
- * handler, supporting the framework’s event-driven design.
- * 
- * @author Angel Velasquez
- * @date March 22, 2025
- * @version 0.1
- */
-
-/*
- * This file is part of the Modest IoT Nano-framework (C++ Edition).
- * Copyright (c) 2025 Angel Velasquez
- *
- * Licensed under the Creative Commons Attribution-NoDerivatives 4.0 International (CC BY-ND 4.0).
- * You may use, copy, and distribute this software in its original, unmodified form, provided
- * you give appropriate credit to the original author (Angel Velasquez) and include this notice.
- * Modifications, adaptations, or derivative works are not permitted.
- * 
- * Full license text: https://creativecommons.org/licenses/by-nd/4.0/legalcode
- */
 
 #include "EventHandler.h"
 
+/**
+ * @brief Clase base Sensor que implementa la interfaz EventHandler.
+ * 
+ * Explicación para principiantes: Un "Sensor" es cualquier componente de entrada del cual leemos información
+ * (por ejemplo: un botón, un sensor de temperatura, un sensor de movimiento). 
+ * Esta clase hereda de EventHandler porque el sensor puede recibir y propagar eventos.
+ */
 class Sensor : public EventHandler {
 protected:
-    int pin; ///< GPIO pin assigned to the sensor.
-    EventHandler* handler; ///< Optional handler to receive propagated events.
+    int pin; ///< Pin GPIO físico asignado a este sensor en la placa.
+    EventHandler* handler; ///< Puntero al manejador de eventos opcional que procesará los eventos generados por este sensor.
 
 public:
     /**
-     * @brief Constructs a Sensor with a pin and optional event handler.
-     * @param pin The GPIO pin for the sensor.
-     * @param eventHandler Pointer to an EventHandler to receive events (default: nullptr).
+     * @brief Constructor de la clase Sensor.
+     * @param pin El pin GPIO físico para el sensor.
+     * @param eventHandler Puntero a un EventHandler para recibir eventos (por defecto: nullptr / nulo).
+     * 
+     * Explicación para principiantes: Un constructor es la función que inicializa un objeto cuando es creado.
      */
     Sensor(int pin, EventHandler* eventHandler = nullptr);
 
     /**
-     * @brief Handles an event by propagating it to the assigned handler.
-     * @param event The event to handle.
+     * @brief Maneja un evento propagándolo al manejador asignado.
+     * @param event El evento que se va a procesar.
+     * 
+     * Explicación para principiantes: 'override' indica que estamos implementando la función que prometimos en EventHandler.
      */
     void on(Event event) override;
 
     /**
-     * @brief Sets or updates the event handler for this sensor.
-     * @param eventHandler Pointer to the new EventHandler.
+     * @brief Asigna o actualiza el manejador de eventos para este sensor.
+     * @param eventHandler Puntero al nuevo EventHandler.
      */
     void setHandler(EventHandler* eventHandler);
 };

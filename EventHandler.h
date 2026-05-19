@@ -1,54 +1,41 @@
 #ifndef EVENT_HANDLER_H
 #define EVENT_HANDLER_H
 
-/**
- * @file EventHandler.h
- * @brief Defines the Event structure and EventHandler interface.
- * 
- * This file provides the foundation for event-driven behavior in the Modest IoT Nano-framework.
- * The `Event` structure represents a unique event type, and `EventHandler` is an abstract
- * interface for classes that respond to events, enabling asynchronous reactivity in IoT devices.
- * 
- * @author Angel Velasquez
- * @date March 22, 2025
- * @version 0.1
- */
-
-/*
- * This file is part of the Modest IoT Nano-framework (C++ Edition).
- * Copyright (c) 2025 Angel Velasquez
- *
- * Licensed under the Creative Commons Attribution-NoDerivatives 4.0 International (CC BY-ND 4.0).
- * You may use, copy, and distribute this software in its original, unmodified form, provided
- * you give appropriate credit to the original author (Angel Velasquez) and include this notice.
- * Modifications, adaptations, or derivative works are not permitted.
- * 
- * Full license text: https://creativecommons.org/licenses/by-nd/4.0/legalcode
- */
 
 /**
- * @brief Represents an event with a unique identifier.
+ * @brief Representa un evento con un identificador único.
  * 
- * Events are lightweight structs used to signal occurrences (e.g., sensor triggers) within
- * the framework. Define custom events by assigning unique IDs in your application.
+ * Explicación para principiantes: Un Evento (Event) es simplemente un mensaje ligero que avisa que "algo sucedió" 
+ * (por ejemplo: un sensor detectó movimiento, o un botón fue presionado). Cada tipo de evento tiene un número único (id) para identificarlo.
  */
 struct Event {
-    int id; ///< Unique identifier for the event type.
+    int id; ///< Identificador único para el tipo de evento.
 
+    // Constructor explícito. Permite crear un evento pasando su ID (ej. Event(0)).
     explicit Event(int eventId) : id(eventId) {}
+    
+    // Sobrecarga de operador == para poder comparar si dos eventos son iguales de manera sencilla: eventA == eventB
     bool operator==(const Event& other) const { return id == other.id; }
 };
 
 /**
- * @brief Abstract interface for handling events.
+ * @brief Interfaz abstracta para manejar eventos.
  * 
- * Implement this interface in classes that need to react to events. The `on` method is called
- * when an event occurs, allowing for custom handling logic.
+ * Explicación para principiantes: En C++, una clase con métodos '= 0' (virtuales puros) actúa como un "contrato" o interfaz.
+ * Cualquier clase que herede de EventHandler PROMETE implementar la función `on(Event event)`.
+ * Esto permite al sistema reaccionar a cualquier evento de manera genérica.
  */
 class EventHandler {
 public:
-    virtual void on(Event event) = 0; ///< Pure virtual method to handle an event.
-    virtual ~EventHandler() = default; ///< Virtual destructor for safe inheritance.
+    /**
+     * @brief Método virtual puro para manejar un evento.
+     * @param event El evento que acaba de ocurrir.
+     * 
+     * Toda clase que herede de EventHandler debe definir este método con su propia lógica de reacción.
+     */
+    virtual void on(Event event) = 0; 
+    
+    virtual ~EventHandler() = default; ///< Destructor virtual para asegurar una correcta liberación de memoria en clases heredadas.
 };
 
 #endif // EVENT_HANDLER_H

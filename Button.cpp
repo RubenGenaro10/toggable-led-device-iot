@@ -1,34 +1,16 @@
-/**
-* @file Button.cpp
- * @brief Implements the Button class.
- *
- * Configures a button as an input device in the Modest IoT Nano-framework, setting up the pin
- * with an internal pull-up resistor. Event generation (e.g., BUTTON_PRESSED_EVENT) is typically
- * triggered externally via interrupt or polling in user code.
- *
- * @author Angel Velasquez
- * @date March 22, 2025
- * @version 0.1
- */
-
-/*
- * This file is part of the Modest IoT Nano-framework (C++ Edition).
- * Copyright (c) 2025 Angel Velasquez
- *
- * Licensed under the Creative Commons Attribution-NoDerivatives 4.0 International (CC BY-ND 4.0).
- * You may use, copy, and distribute this software in its original, unmodified form, provided
- * you give appropriate credit to the original author (Angel Velasquez) and include this notice.
- * Modifications, adaptations, or derivative works are not permitted.
- *
- * Full license text: https://creativecommons.org/licenses/by-nd/4.0/legalcode
- */
 
 #include "Button.h"
-#include <Arduino.h>
+#include <Arduino.h> // Incluye la biblioteca base de Arduino para poder usar pinMode e INPUT_PULLUP.
 
+// Inicializamos el evento estático predefinido del botón pasándole su identificador único.
 const Event Button::BUTTON_PRESSED_EVENT = Event(BUTTON_PRESSED_EVENT_ID);
 
+// Constructor de la clase Button
+// Explicación para principiantes: Llama al constructor de la clase base 'Sensor' pasándole el pin y el eventHandler.
+// Luego ejecuta pinMode(pin, INPUT_PULLUP) para configurar el hardware.
 Button::Button(int pin, EventHandler* eventHandler)
     : Sensor(pin, eventHandler) {
+    // Configura el pin del botón como entrada con resistencia de pull-up interna.
+    // Esto hace que el pin lea HIGH (1) por defecto, y LOW (0) cuando se presiona físicamente el botón para cerrarlo a tierra (GND).
     pinMode(pin, INPUT_PULLUP);
 }

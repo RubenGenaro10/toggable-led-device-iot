@@ -1,55 +1,38 @@
 #ifndef ACTUATOR_H
 #define ACTUATOR_H
 
-/**
- * @file Actuator.h
- * @brief Declares the Actuator base class.
- * 
- * This abstract base class represents output devices in the Modest IoT Nano-framework, providing
- * a foundation for actuators that respond to commands. It includes command propagation to an
- * optional handler, supporting the framework’s CQRS-inspired design.
- * 
- * @author Angel Velasquez
- * @date March 22, 2025
- * @version 0.1
- */
-
-/*
- * This file is part of the Modest IoT Nano-framework (C++ Edition).
- * Copyright (c) 2025 Angel Velasquez
- *
- * Licensed under the Creative Commons Attribution-NoDerivatives 4.0 International (CC BY-ND 4.0).
- * You may use, copy, and distribute this software in its original, unmodified form, provided
- * you give appropriate credit to the original author (Angel Velasquez) and include this notice.
- * Modifications, adaptations, or derivative works are not permitted.
- * 
- * Full license text: https://creativecommons.org/licenses/by-nd/4.0/legalcode
- */
 
 #include "CommandHandler.h"
 
+/**
+ * @brief Clase base Actuator que implementa la interfaz CommandHandler.
+ * 
+ * Explicación para principiantes: Un "Actuador" es cualquier componente de salida que realiza una acción física 
+ * en el mundo real (por ejemplo: un LED, un servomotor, un relé para encender un motor).
+ * Hereda de CommandHandler porque recibe comandos u órdenes para saber qué acción ejecutar.
+ */
 class Actuator : public CommandHandler {
 protected:
-    int pin; ///< GPIO pin assigned to the actuator.
-    CommandHandler* handler; ///< Optional handler to receive propagated commands.
+    int pin; ///< Pin GPIO físico asignado a este actuador en la placa.
+    CommandHandler* handler; ///< Puntero al manejador de comandos opcional que recibirá la confirmación o propagación de los comandos.
 
 public:
     /**
-     * @brief Constructs an Actuator with a pin and optional command handler.
-     * @param pin The GPIO pin for the actuator.
-     * @param commandHandler Pointer to a CommandHandler to receive commands (default: nullptr).
+     * @brief Constructor de la clase Actuator.
+     * @param pin El pin GPIO físico para el actuador.
+     * @param commandHandler Puntero a un CommandHandler para procesar o propagar los comandos (por defecto: nullptr / nulo).
      */
     Actuator(int pin, CommandHandler* commandHandler = nullptr);
 
     /**
-     * @brief Handles a command by propagating it to the assigned handler.
-     * @param command The command to handle.
+     * @brief Maneja un comando propagándolo al manejador asignado.
+     * @param command El comando que se va a procesar.
      */
     void handle(Command command) override;
 
     /**
-     * @brief Sets or updates the command handler for this actuator.
-     * @param commandHandler Pointer to the new CommandHandler.
+     * @brief Asigna o actualiza el manejador de comandos para este actuador.
+     * @param commandHandler Puntero al nuevo CommandHandler.
      */
     void setHandler(CommandHandler* commandHandler);
 };

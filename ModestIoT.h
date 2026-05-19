@@ -1,38 +1,17 @@
 #ifndef MODEST_IOT_H
 #define MODEST_IOT_H
 
-/**
- * @file ModestIoT.h
- * @brief Convenience header for the Modest IoT Nano-framework (C++ Edition).
- *
- * This header includes all core components of the Modest IoT Nano-framework, a lightweight,
- * object-oriented, event-driven, and CQRS-inspired framework for building IoT applications on
- * Arduino-compatible devices like the ESP32. It serves as the primary entry point for using
- * the framework in your projects.
- *
- * @author Angel Velasquez
- * @date March 22, 2025
- * @version 0.1
- */
 
-/*
- * This file is part of the Modest IoT Nano-framework (C++ Edition).
- * Copyright (c) 2025 Angel Velasquez
- *
- * Licensed under the Creative Commons Attribution-NoDerivatives 4.0 International (CC BY-ND 4.0).
- * You may use, copy, and distribute this software in its original, unmodified form, provided
- * you give appropriate credit to the original author (Angel Velasquez) and include this notice.
- * Modifications, adaptations, or derivative works are not permitted.
- *
- * Full license text: https://creativecommons.org/licenses/by-nd/4.0/legalcode
- */
+// --- IMPORTACIÓN DE COMPONENTES DEL FRAMEWORK ---
+// Explicación para principiantes: Incluir estos encabezados permite que cualquier archivo que incluya "ModestIoT.h"
+// tenga acceso a todas las clases y estructuras del framework de una sola vez, simplificando el desarrollo.
 
-#include "EventHandler.h"
-#include "CommandHandler.h"
-#include "Sensor.h"
-#include "Actuator.h"
-#include "Button.h"
-#include "Led.h"
-#include "Device.h"
+#include "EventHandler.h"   // Manejo de Eventos (entrada de sensores)
+#include "CommandHandler.h" // Manejo de Comandos (salida de actuadores)
+#include "Sensor.h"         // Clase base para Sensores (lectura de señales)
+#include "Actuator.h"       // Clase base para Actuadores (acción física)
+#include "Button.h"         // Sensor específico de Botón
+#include "Led.h"            // Actuador específico de LED
+#include "Device.h"         // Clase base que unifica Sensores y Actuadores en un Dispositivo
 
 #endif // MODEST_IOT_H
